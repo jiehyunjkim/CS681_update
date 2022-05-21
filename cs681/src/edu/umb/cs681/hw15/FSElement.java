@@ -2,19 +2,24 @@ package edu.umb.cs681.hw15;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 class FileSystem{
-	private static FileSystem INSTANCE = new FileSystem();
-	private FileSystem() { }
+	private static FileSystem INSTANCE;
+    ConcurrentLinkedQueue<Directory> directory = new ConcurrentLinkedQueue<>();
 	
 	private static FileSystem getFileSystem() {
+		if (INSTANCE == null) {
+			INSTANCE = new FileSystem();
+		}
 		return INSTANCE;}
 	
-	public LinkedList<Directory> getRootDirs() {
-		return null;
+	public ConcurrentLinkedQueue<Directory>  getRootDirs() {
+		return this.directory;
 	}
-	public void appendRootDir() {
+	public void appendRootDir(Directory root) {
+		directory.add(root);
 	}
 }
 
@@ -47,23 +52,23 @@ abstract class FSElement{
 
 
 class Directory extends FSElement{
-	private FSElement child;
-	private LinkedList<FSElement> children;
-	private int count;
-	public int size;
+	ConcurrentLinkedQueue<FSElement> children;
+	private FileSystem filesystem;
 	
 	Directory(Directory parent, String name, int size, LocalDateTime creationTime){
 		super(parent, name, size, creationTime);
+		
+		children = new ConcurrentLinkedQueue<>();
 	}
 
-	private LinkedList<FSElement> getChildren(){
+	private ConcurrentLinkedQueue<FSElement> getChildren(){
 		return this.children;
 	};
-	private void appendChild() {
-		this.children.add(child);
-		child.setParent(this);
+	private void appendChild(FSElement ac) {
+		this.children.add(ac);
 	};
-	private int countChildren() {
+	private int countChildren() {	
+		int count = 0;
 		return count;
 	};
 	private String getName() {
@@ -75,9 +80,6 @@ class Directory extends FSElement{
 	public LocalDateTime getCreationTime() {
 		return this.creationTime;
 	}
-	private FSElement children(){
-		return this.child;
-	};
 	private LinkedList<Directory> getSubDirectories(){
 		return null;
 	}

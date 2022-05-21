@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-
-
 public class PVI {
 	static List<Covid> covid = Arrays.asList(
 			new Covid(15578, 209),
@@ -18,9 +16,10 @@ public class PVI {
 		try {
 			Scanner sc = new Scanner(new FileReader("files/data.csv"));
 			
-			double sumofCases = covid.stream().map(Covid::getCases)
-					.reduce(0, (result, cases) -> {
-	                    ++cases/result;
+			double sumofCases = covid.stream()
+					.map((Covid covid) -> covid.getCases())
+					.reduce(0, (result, cases)) -> {
+	                    ++cases;
 					});
 			
 			System.out.println("Sum of cases: "+sumofCases);
